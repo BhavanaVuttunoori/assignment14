@@ -49,8 +49,23 @@ jobs:
         ALGORITHM: HS256
         ACCESS_TOKEN_EXPIRE_MINUTES: 30
       run: |
-        uvicorn app.main:app --host 0.0.0.0 --port 8000 &
-        sleep 10
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &
+        echo $! > app.pid
+        sleep 5
+        
+    - name: Wait for application to be ready
+      run: |
+        for i in {1..30}; do
+          if curl -s http://localhost:8000/health > /dev/null; then
+            echo "Application is ready!"
+            exit 0
+          fi
+          echo "Waiting for application... ($i/30)"
+          sleep 2
+        done
+        echo "Application failed to start"
+        cat app.log
+        exit 1
     
     - name: Run Playwright tests
       run: |
