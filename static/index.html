@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculations API - BREAD Operations</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Calculations Manager</h1>
+        
+        <!-- Authentication Section -->
+        <div id="auth-section" class="section">
+            <h2>Authentication</h2>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('login-tab')">Login</button>
+                <button class="tab-btn" onclick="showTab('register-tab')">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="login-tab" class="tab-content active">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Username:</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password:</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="register-tab" class="tab-content">
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">Username:</label>
+                        <input type="text" id="register-username" required minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email:</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password:</label>
+                        <input type="password" id="register-password" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+            
+            <div id="auth-message" class="message"></div>
+        </div>
+
+        <!-- Calculations Section (Hidden until logged in) -->
+        <div id="calculations-section" class="section hidden">
+            <div class="user-info">
+                <span id="user-display"></span>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+            
+            <!-- Add Calculation Form -->
+            <div class="card">
+                <h2>Add New Calculation</h2>
+                <form id="add-calculation-form">
+                    <div class="form-group">
+                        <label for="operation">Operation:</label>
+                        <select id="operation" required>
+                            <option value="">Select operation</option>
+                            <option value="add">Addition (+)</option>
+                            <option value="subtract">Subtraction (-)</option>
+                            <option value="multiply">Multiplication (×)</option>
+                            <option value="divide">Division (÷)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="operand1">First Number:</label>
+                        <input type="number" id="operand1" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="operand2">Second Number:</label>
+                        <input type="number" id="operand2" step="any" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Calculate & Save</button>
+                </form>
+            </div>
+            
+            <!-- Browse Calculations -->
+            <div class="card">
+                <h2>Your Calculations</h2>
+                <button onclick="loadCalculations()" class="btn btn-primary">Refresh List</button>
+                <div id="calculations-list"></div>
+            </div>
+            
+            <!-- Edit Calculation Modal -->
+            <div id="edit-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h2>Edit Calculation</h2>
+                    <form id="edit-calculation-form">
+                        <input type="hidden" id="edit-id">
+                        <div class="form-group">
+                            <label for="edit-operation">Operation:</label>
+                            <select id="edit-operation" required>
+                                <option value="add">Addition (+)</option>
+                                <option value="subtract">Subtraction (-)</option>
+                                <option value="multiply">Multiplication (×)</option>
+                                <option value="divide">Division (÷)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-operand1">First Number:</label>
+                            <input type="number" id="edit-operand1" step="any" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-operand2">Second Number:</label>
+                            <input type="number" id="edit-operand2" step="any" required>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="calc-message" class="message"></div>
+        </div>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>
