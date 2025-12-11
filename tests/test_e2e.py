@@ -146,7 +146,10 @@ class TestCalculationsBREAD:
         time.sleep(1)
         login_user(page, self.username, self.password)
         time.sleep(1)
-    wait_for_selector("#operation", timeout=10000)
+    
+    def test_add_calculation_positive(self, page: Page):
+        """Positive test: Add (Create) a new calculation"""
+        page.wait_for_selector("#operation", timeout=10000)
         page.select_option("#operation", "add")
         page.fill("#operand1", "10")
         page.fill("#operand2", "5")
@@ -161,10 +164,7 @@ class TestCalculationsBREAD:
         # Verify calculation appears in list
         page.wait_for_timeout(1000)
         calc_list = page.locator("#calculations-list")
-        expect(calc_list).to_contain_text("10 + 5 = 15", timeout=10000
-        # Verify calculation appears in list
-        calc_list = page.locator("#calculations-list")
-        expect(calc_list).to_contain_text("10 + 5 = 15")
+        expect(calc_list).to_contain_text("10 + 5 = 15", timeout=10000)
     
     def test_add_calculation_divide_by_zero(self, page: Page):
         """Negative test: Add calculation with division by zero"""
