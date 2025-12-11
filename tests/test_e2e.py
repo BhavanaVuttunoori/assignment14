@@ -79,8 +79,7 @@ class TestAuthentication:
         # Check for error message
         page.wait_for_selector("#auth-message.error", timeout=10000)
         message = page.locator("#auth-message")
-        expect(message).to_contain_text("already registered", timeout=10000
-        expect(message).to_contain_text("already registered")
+        expect(message).to_contain_text("already registered", timeout=10000)
     
     def test_register_invalid_email(self, page: Page):
         """Negative test: Register with invalid email format"""
