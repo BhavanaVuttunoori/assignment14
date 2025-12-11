@@ -13,26 +13,30 @@ def browser_context_args(browser_context_args):
 
 # Helper function to register a test user
 def register_user(page: Page, username: str, email: str, password: str):
-    page.goto(BASE_URL)
+    page.goto(BASE_URL, wait_until="networkidle")
+    page.wait_for_selector("text=Register", timeout=10000)
     page.click("text=Register")
+    page.wait_for_selector("#register-username", timeout=5000)
     page.fill("#register-username", username)
     page.fill("#register-email", email)
     page.fill("#register-password", password)
     page.click("#register-form button[type='submit']")
-    time.sleep(1)
+    page.wait_for_timeout(2000)
 
 # Helper function to login
 def login_user(page: Page, username: str, password: str):
-    page.goto(BASE_URL)
+    page.goto(BASE_URL, wait_until="networkidle")
+    page.wait_for_selector("#login-username", timeout=10000)
     page.fill("#login-username", username)
     page.fill("#login-password", password)
     page.click("#login-form button[type='submit']")
-    time.sleep(1)
+    page.wait_for_timeout(2000)
 
 # Helper function to logout
 def logout_user(page: Page):
+    page.wait_for_selector("text=Logout", timeout=5000)
     page.click("text=Logout")
-    time.sleep(1)
+    page.wait_for_timeout(1000)
 
 
 class TestAuthentication:
@@ -48,8 +52,9 @@ class TestAuthentication:
         register_user(page, username, email, password)
         
         # Check for success message
+        page.wait_for_selector("#auth-message.success", timeout=10000)
         message = page.locator("#auth-message")
-        expect(message).to_contain_text("Registration successful")
+        expect(message).to_contain_text("Registration successful", timeout=10000)
     
     def test_register_duplicate_username(self, page: Page):
         """Negative test: Register with duplicate username"""
@@ -59,19 +64,22 @@ class TestAuthentication:
         password = "TestPass123"
         
         # Register first time
-        register_user(page, username, email, password)
-        time.sleep(1)
+        page.wait_for_timeout(2000)
         
         # Try to register again with same username
+        page.wait_for_selector("text=Register", timeout=5000)
         page.click("text=Register")
+        page.wait_for_selector("#register-username", timeout=5000)
         page.fill("#register-username", username)
         page.fill("#register-email", f"test2_{timestamp}@example.com")
         page.fill("#register-password", password)
         page.click("#register-form button[type='submit']")
-        time.sleep(1)
+        page.wait_for_timeout(2000)
         
         # Check for error message
+        page.wait_for_selector("#auth-message.error", timeout=10000)
         message = page.locator("#auth-message")
+        expect(message).to_contain_text("already registered", timeout=10000
         expect(message).to_contain_text("already registered")
     
     def test_register_invalid_email(self, page: Page):
@@ -139,19 +147,22 @@ class TestCalculationsBREAD:
         time.sleep(1)
         login_user(page, self.username, self.password)
         time.sleep(1)
-    
-    def test_add_calculation_positive(self, page: Page):
-        """Positive test: Add (Create) a new calculation"""
+    wait_for_selector("#operation", timeout=10000)
         page.select_option("#operation", "add")
         page.fill("#operand1", "10")
         page.fill("#operand2", "5")
         page.click("#add-calculation-form button[type='submit']")
-        time.sleep(1)
+        page.wait_for_timeout(2000)
         
         # Check for success message with result
+        page.wait_for_selector("#calc-message.success", timeout=10000)
         message = page.locator("#calc-message")
-        expect(message).to_contain_text("15")
+        expect(message).to_contain_text("15", timeout=10000)
         
+        # Verify calculation appears in list
+        page.wait_for_timeout(1000)
+        calc_list = page.locator("#calculations-list")
+        expect(calc_list).to_contain_text("10 + 5 = 15", timeout=10000
         # Verify calculation appears in list
         calc_list = page.locator("#calculations-list")
         expect(calc_list).to_contain_text("10 + 5 = 15")
