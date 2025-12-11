@@ -276,22 +276,22 @@ def test_user_isolation():
     client.post("/auth/register", json={
         "username": "user1",
         "email": "user1@example.com",
-        "password": "Pass123"
+        "password": "TestPass123"
     })
     token1 = client.post("/auth/token", data={
         "username": "user1",
-        "password": "Pass123"
+        "password": "TestPass123"
     }).json()["access_token"]
     
     # Create second user
     client.post("/auth/register", json={
         "username": "user2",
         "email": "user2@example.com",
-        "password": "Pass123"
+        "password": "TestPass123"
     })
     token2 = client.post("/auth/token", data={
         "username": "user2",
-        "password": "Pass123"
+        "password": "TestPass123"
     }).json()["access_token"]
     
     # User1 creates calculation
