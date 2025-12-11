@@ -1,218 +1,106 @@
-# Calculations API - BREAD Operations
+# Web API - Module 14 Assignment
 
-A full-stack web application implementing BREAD (Browse, Read, Edit, Add, Delete) operations for calculations with user authentication, built with FastAPI, PostgreSQL, and modern web technologies.
+The Assignment 14 deliverable is a fully tested FastAPI user authentication and calculation service with BREAD operations, packaged for local development, Docker usage, and CI/CD. This README documents how the project is structured, what was implemented, and how to reproduce the results.
 
-## 🚀 Features
+## Project Highlights
 
-- **Complete BREAD Operations** for calculations
-  - **Browse**: View all calculations for logged-in user
-  - **Read**: Get details of a specific calculation
-  - **Edit**: Update existing calculations (PUT/PATCH)
-  - **Add**: Create new calculations with various operations
-  - **Delete**: Remove calculations
+Built with FastAPI and SQLAlchemy to expose user registration/login and calculation operations through REST endpoints with database persistence. Secure user authentication with JWT tokens, bcrypt password hashing, and comprehensive validation. BREAD pattern implementation (Browse, Read, Edit, Add, Delete) for calculation management. Robust Pydantic validation in app/schemas.py with explicit error handling (division by zero, email format, password strength). Comprehensive automated E2E test suite with Playwright covering user and calculation scenarios (15+ tests). SQLAlchemy ORM models with proper relationships between Users and Calculations tables. Continuous Integration via GitHub Actions to test with PostgreSQL, build Docker images, and deploy to Docker Hub. Containerized delivery: public Docker image available at bhavanavuttunoori/calculations-api.
 
-- **User Authentication & Authorization**
-  - Secure user registration and login
-  - JWT token-based authentication
-  - Password hashing with bcrypt
-  - User-specific calculation isolation
+## Getting Started
 
-- **Mathematical Operations**
-  - Addition
-  - Subtraction
-  - Multiplication
-  - Division (with zero-division protection)
-
-- **Modern Front-End**
-  - Responsive design
-  - Form validation
-  - Real-time updates
-  - User-friendly interface
-
-- **Testing & CI/CD**
-  - Comprehensive Playwright E2E tests
-  - GitHub Actions automation
-  - Docker containerization
-  - Automated Docker Hub deployment
-
-## 📋 Requirements
-
-- Python 3.11+
-- PostgreSQL 15+
-- Docker & Docker Compose (optional)
-- Node.js (for Playwright)
-
-## 🛠️ Installation & Setup
-
-### Option 1: Using Docker Compose (Recommended)
-
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd WEBAPI_ASS14
-   ```
-
-2. **Configure environment variables**
-   - Review the `.env` file
-   - Update `SECRET_KEY` for production
-
-3. **Start the application**
-   ```bash
-   docker-compose up --build
-   ```
-
-4. **Access the application**
-   - Application: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-   - Interactive API: http://localhost:8000/redoc
-
-### Option 2: Local Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd WEBAPI_ASS14
-   ```
-
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   
-   # Windows
-   venv\Scripts\activate
-   
-   # Linux/Mac
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up PostgreSQL database**
-   ```bash
-   # Install PostgreSQL and create database
-   createdb calculations_db
-   ```
-
-5. **Configure environment variables**
-   ```bash
-   # Update .env file with your database URL
-   DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/calculations_db
-   SECRET_KEY=your-secret-key-change-in-production-min-32-chars-long
-   ```
-
-6. **Run the application**
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-7. **Access the application**
-   - Application: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-
-## 🧪 Running Tests
-
-### Local Testing
-
-1. **Install test dependencies**
-   ```bash
-   pip install -r requirements.txt
-   playwright install chromium
-   playwright install-deps
-   ```
-
-2. **Start the application** (in a separate terminal)
-   ```bash
-   uvicorn app.main:app --host 0.0.0.0 --port 8000
-   ```
-
-3. **Run Playwright tests**
-   ```bash
-   pytest tests/test_e2e.py -v
-   ```
-
-### Test Coverage
-
-The test suite includes:
-
-- **Authentication Tests**
-  - ✅ Successful registration
-  - ✅ Duplicate username handling
-  - ✅ Invalid email format
-  - ✅ Successful login
-  - ✅ Wrong password handling
-
-- **BREAD Operations Tests**
-  - ✅ Add calculation (positive)
-  - ✅ Division by zero (negative)
-  - ✅ Browse all calculations
-  - ✅ Read specific calculation
-  - ✅ Edit calculation (positive)
-  - ✅ Delete calculation
-  - ✅ User isolation
-
-- **Edge Cases**
-  - ✅ Decimal numbers
-  - ✅ Negative numbers
-  - ✅ Large numbers
-
-## 🔄 CI/CD Pipeline
-
-The project uses GitHub Actions for continuous integration and deployment:
-
-1. **On Push/Pull Request**
-   - Sets up Python and PostgreSQL
-   - Installs dependencies
-   - Runs Playwright E2E tests
-   - Uploads test results
-
-2. **On Push to Main/Master** (after tests pass)
-   - Builds Docker image
-   - Pushes to Docker Hub
-   - Tags with latest and commit SHA
-
-### Setting Up GitHub Actions
-
-1. **Add secrets to GitHub repository**
-   - Go to Settings → Secrets and variables → Actions
-   - Add the following secrets:
-     - `DOCKER_USERNAME`: Your Docker Hub username
-     - `DOCKER_PASSWORD`: Your Docker Hub password/token
-
-2. **Push to GitHub**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin <your-repo-url>
-   git push -u origin main
-   ```
-
-3. **Monitor workflow**
-   - Go to Actions tab in GitHub
-   - View workflow runs and results
-
-## 🐳 Docker Hub
-
-After successful CI/CD pipeline execution, the Docker image is automatically pushed to Docker Hub.
-
-**Pull and run the image:**
+### 1. Setup Environment
 ```bash
-# Pull the image
-docker pull bhavanavuttunoori/calculations-api:latest
-
-# Run with PostgreSQL
-docker-compose up
+cd WEBAPI_ASS14
+python -m venv venv
+venv\Scripts\activate  # Windows
+pip install -r requirements.txt
 ```
 
-## 📚 API Documentation
+### 2. Run the Application Locally
+```bash
+uvicorn app.main:app --reload
+```
+Navigate to http://localhost:8000 for the web interface or http://localhost:8000/docs for the Swagger UI.
 
-### Authentication Endpoints
+## Docker Usage
 
-#### Register User
+### Build Locally (optional)
+```bash
+docker build -t calculations-api .
+docker run -p 8000:8000 -e DATABASE_URL=postgresql://postgres:postgres@localhost:5432/calculations_db calculations-api
+```
+
+### Pull Prebuilt Image
+```bash
+docker pull bhavanavuttunoori/calculations-api:latest
+docker run -p 8000:8000 -e DATABASE_URL=postgresql://postgres:postgres@localhost:5432/calculations_db bhavanavuttunoori/calculations-api:latest
+```
+
+### Using Docker Compose
+```bash
+docker-compose up -d
+```
+The application will be available at http://localhost:8000 with PostgreSQL database.
+
+## Testing Strategy
+
+**E2E Tests (tests/test_e2e.py)**: verify user registration, login, validation rules, and complete BREAD operations through browser automation with Playwright.
+
+**Test Categories**:
+- Authentication: Registration, login, duplicate handling, invalid credentials
+- BREAD Operations: Browse, Read, Edit, Add, Delete calculations
+- Edge Cases: Decimal numbers, negative numbers, large numbers, division by zero
+- Security: User isolation, unauthorized access prevention
+
+Run the full suite:
+```bash
+pytest tests/test_e2e.py -v
+```
+
+Run with Playwright headed mode (see browser):
+```bash
+pytest tests/test_e2e.py --headed
+```
+
+## Project Structure
+
+```
+WEBAPI_ASS14/
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # FastAPI application with all endpoints
+│   ├── database.py          # Database configuration and ORM models
+│   ├── schemas.py           # Pydantic validation schemas
+│   ├── auth.py              # JWT authentication and password hashing
+│   └── routes/
+│       ├── __init__.py
+│       ├── auth_routes.py   # User registration and login endpoints
+│       └── calculation_routes.py  # Calculation BREAD endpoints
+├── static/
+│   ├── index.html           # Web interface
+│   ├── styles.css           # Responsive styling
+│   └── app.js               # Client-side JavaScript
+├── tests/
+│   ├── __init__.py
+│   └── test_e2e.py          # Playwright E2E tests
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml        # GitHub Actions CI/CD pipeline
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── pytest.ini
+├── setup.bat / setup.sh     # Quick setup scripts
+├── .env
+├── .gitignore
+└── README.md
+```
+
+## API Endpoints
+
+### User Operations
+
+**Create User (Register)**:
 ```http
 POST /auth/register
 Content-Type: application/json
@@ -220,47 +108,63 @@ Content-Type: application/json
 {
   "username": "johndoe",
   "email": "john@example.com",
-  "password": "securepass123"
+  "password": "securepassword123"
 }
 ```
 
-#### Login
+**Login**:
 ```http
 POST /auth/token
 Content-Type: application/x-www-form-urlencoded
 
-username=johndoe&password=securepass123
+username=johndoe&password=securepassword123
 ```
 
-Response:
-```json
-{
-  "access_token": "eyJhbGc...",
-  "token_type": "bearer"
-}
-```
-
-#### Get Current User
+**Get Current User**:
 ```http
 GET /auth/me
 Authorization: Bearer <token>
 ```
 
-### Calculation Endpoints
+### Calculation Operations (BREAD)
 
-#### Browse - Get All Calculations
+**Browse Calculations**:
 ```http
 GET /calculations/
 Authorization: Bearer <token>
 ```
 
-#### Read - Get Specific Calculation
+**Read Calculation**:
 ```http
-GET /calculations/{id}
+GET /calculations/{calculation_id}
 Authorization: Bearer <token>
 ```
 
-#### Add - Create Calculation
+**Edit Calculation**:
+```http
+PUT /calculations/{calculation_id}
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "operation": "multiply",
+  "operand1": 20,
+  "operand2": 5
+}
+```
+
+Or partial update with PATCH:
+```http
+PATCH /calculations/{calculation_id}
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "operand1": 20
+}
+```
+
+**Add Calculation**:
 ```http
 POST /calculations/
 Authorization: Bearer <token>
@@ -268,176 +172,249 @@ Content-Type: application/json
 
 {
   "operation": "add",
-  "operand1": 10,
-  "operand2": 5
+  "operand1": 10.5,
+  "operand2": 5.2
 }
 ```
 
-Operations: `add`, `subtract`, `multiply`, `divide`
-
-#### Edit - Update Calculation
+**Delete Calculation**:
 ```http
-PUT /calculations/{id}
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "operation": "multiply",
-  "operand1": 8,
-  "operand2": 3
-}
-```
-
-Or partial update:
-```http
-PATCH /calculations/{id}
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "operand1": 15
-}
-```
-
-#### Delete - Remove Calculation
-```http
-DELETE /calculations/{id}
+DELETE /calculations/{calculation_id}
 Authorization: Bearer <token>
 ```
 
-## 🏗️ Project Structure
+## BREAD Pattern Implementation
 
-```
-WEBAPI_ASS14/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI application
-│   ├── database.py          # Database models and config
-│   ├── schemas.py           # Pydantic schemas
-│   ├── auth.py              # Authentication utilities
-│   └── routes/
-│       ├── __init__.py
-│       ├── auth_routes.py   # Auth endpoints
-│       └── calculation_routes.py  # BREAD endpoints
-├── static/
-│   ├── index.html           # Front-end interface
-│   ├── styles.css           # Styling
-│   └── app.js               # Client-side logic
-├── tests/
-│   ├── __init__.py
-│   └── test_e2e.py          # Playwright E2E tests
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml        # GitHub Actions workflow
-├── .env                     # Environment variables
-├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── pytest.ini
-└── README.md
-```
+The BREAD pattern in app/routes/calculation_routes.py provides comprehensive calculation management:
 
-## 🔒 Security Features
+- **Browse**: List all calculations with user-specific filtering (only see your own)
+- **Read**: Retrieve specific calculation by ID with authorization check
+- **Edit**: Update calculation operation or operands with automatic result recalculation (PUT/PATCH)
+- **Add**: Create new calculation with validation and automatic result computation
+- **Delete**: Remove calculation from database with ownership verification
 
-- **Password Hashing**: Uses bcrypt for secure password storage
-- **JWT Tokens**: Secure token-based authentication
-- **User Isolation**: Users can only access their own calculations
-- **Input Validation**: Pydantic models validate all inputs
-- **SQL Injection Protection**: SQLAlchemy ORM prevents SQL injection
-- **CORS Configuration**: Configurable cross-origin requests
+**Supported operations**: Add, Subtract, Multiply, Divide with division by zero protection.
 
-## 🎯 Learning Outcomes Achieved
-
-- ✅ **CLO3**: Python applications with automated testing (Playwright)
-- ✅ **CLO4**: GitHub Actions CI/CD with automated tests and Docker builds
-- ✅ **CLO9**: Docker containerization
-- ✅ **CLO10**: REST API creation, consumption, and testing
-- ✅ **CLO11**: SQL database integration (PostgreSQL with SQLAlchemy)
-- ✅ **CLO12**: JSON serialization/deserialization with Pydantic
-- ✅ **CLO13**: Secure authentication (JWT, bcrypt hashing)
-
-## 📸 Screenshots Guide
-
-For assignment submission, capture:
-
-1. **GitHub Actions Workflow**
-   - Navigate to Actions tab
-   - Show successful workflow run (green checkmark)
-   - Capture test results
-
-2. **Docker Hub Deployment**
-   - Show Docker Hub repository
-   - Display pushed image with tags
-
-3. **Application Functionality**
-   - Registration form
-   - Login screen
-   - Create calculation form
-   - List of calculations
-   - Edit calculation modal
-   - Delete confirmation
-   - API documentation (/docs)
-
-## 🐛 Troubleshooting
-
-### Database Connection Issues
+Example usage:
 ```bash
-# Check PostgreSQL is running
-docker-compose ps
+# Browse calculations
+GET /calculations/
+Authorization: Bearer <token>
 
-# View logs
-docker-compose logs db
+# Add new calculation
+POST /calculations/
+Authorization: Bearer <token>
+{"operation": "add", "operand1": 10, "operand2": 5}  # Returns 15
 
-# Recreate database
-docker-compose down -v
-docker-compose up --build
+# Edit calculation
+PUT /calculations/1
+Authorization: Bearer <token>
+{"operation": "multiply", "operand1": 10, "operand2": 5}  # Recalculates to 50
+
+# Delete calculation
+DELETE /calculations/1
+Authorization: Bearer <token>
 ```
 
-### Port Already in Use
-```bash
-# Windows - Find and kill process
-netstat -ano | findstr :8000
-taskkill /PID <PID> /F
+## Database Schema
 
-# Linux/Mac
-lsof -ti:8000 | xargs kill -9
-```
+**Users Table**:
+- id (Integer, Primary Key)
+- username (String, Unique, Indexed)
+- email (String, Unique, Indexed)
+- hashed_password (String)
+- created_at (DateTime)
 
-### Test Failures
-```bash
-# Ensure application is running
-curl http://localhost:8000/health
+**Calculations Table**:
+- id (Integer, Primary Key)
+- operation (String: add, subtract, multiply, divide)
+- operand1 (Float)
+- operand2 (Float)
+- result (Float)
+- created_at (DateTime)
+- updated_at (DateTime)
+- user_id (Integer, Foreign Key to users.id)
 
-# Clear test data
-# Recreate database
-docker-compose down -v && docker-compose up -d
-```
+**Relationship**: One User can have many Calculations (one-to-many with cascade delete).
 
-## 🤝 Contributing
+## Continuous Integration
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
+The repository includes a GitHub Actions workflow (.github/workflows/ci-cd.yml) that runs on every push:
 
-## 📝 License
+**Test Job**:
+- Set up Python 3.11
+- Start PostgreSQL 15 service container
+- Install dependencies with caching
+- Install Playwright browsers
+- Start FastAPI application
+- Run E2E tests (test_e2e.py)
+- Generate and upload test results
 
-This project is created for educational purposes as part of Module 14 Assignment.
+**Build and Push Job (main branch only)**:
+- Build Docker image
+- Tag with latest and commit SHA
+- Push to Docker Hub (bhavanavuttunoori/calculations-api)
 
-## 👤 Author
+**Required GitHub Secrets**:
+- DOCKER_USERNAME: Your Docker Hub username
+- DOCKER_PASSWORD: Your Docker Hub access token
 
-**Student Name**: [Your Name]
-**Course**: Web API Development
-**Assignment**: Module 14 - BREAD Functionality for Calculations
+## Assignment Instructions & Deliverables
 
-## 🔗 Links
+**Objective**: Implement and test user authentication with calculation BREAD operations, comprehensive E2E testing, and CI/CD pipeline.
 
+### Implementation Checklist
+- ✅ SQLAlchemy models for User and Calculation with proper relationships
+- ✅ Pydantic schemas with validation (division by zero, email format, password strength)
+- ✅ User registration endpoint with duplicate detection and password hashing
+- ✅ User login endpoint with JWT token generation
+- ✅ Calculation BREAD endpoints (Browse, Read, Edit, Add, Delete)
+- ✅ 15+ comprehensive Playwright E2E tests
+- ✅ FastAPI application with full CRUD operations
+- ✅ GitHub Actions workflow with PostgreSQL integration
+- ✅ Docker containerization with docker-compose support
+- ✅ Responsive web interface with client-side validation
+- ✅ Comprehensive documentation
+
+### Submission Package
+- **GitHub repository**: https://github.com/BhavanaVuttunoori/assignment14
+- **Docker Hub image**: https://hub.docker.com/r/bhavanavuttunoori/calculations-api
+- **Screenshots demonstrating**:
+  - Successful GitHub Actions workflow
+  - Docker Hub deployment
+  - Web interface (registration, login, BREAD operations)
+  - API documentation (Swagger UI)
+  - Test execution results
+
+## Grading Guidelines
+
+**Criterion: BREAD Endpoints (25 Points)**
+- Browse endpoint with user filtering
+- Read endpoint for specific calculation
+- Edit endpoint with automatic recalculation (PUT/PATCH)
+- Add endpoint with validation and calculation
+- Delete endpoint with authorization
+- Proper error handling (division by zero, not found, unauthorized)
+
+**Criterion: Authentication (25 Points)**
+- Registration endpoint with validation and password hashing
+- Login endpoint with JWT token generation
+- User isolation (users only see their own calculations)
+- Proper error handling (duplicate users, invalid credentials)
+
+**Criterion: Testing (25 Points)**
+- 15+ E2E tests with Playwright
+- User registration and login tests
+- Calculation BREAD operation tests
+- Error scenario tests (negative testing)
+- Edge case tests (decimals, negatives, large numbers)
+
+**Criterion: CI/CD Pipeline (15 Points)**
+- GitHub Actions workflow configuration
+- PostgreSQL service container integration
+- Docker build and push automation
+- Automated test execution
+
+**Criterion: Documentation (10 Points)**
+- Comprehensive README with setup instructions
+- API documentation via Swagger
+- Code comments and docstrings
+- Web interface with user-friendly design
+
+## Helpful Commands
+
+| Task | Command |
+|------|---------|
+| Install dependencies | `pip install -r requirements.txt` |
+| Run application | `uvicorn app.main:app --reload` |
+| Run E2E tests | `pytest tests/test_e2e.py -v` |
+| Run tests headed mode | `pytest tests/test_e2e.py --headed` |
+| Install Playwright | `playwright install chromium` |
+| Build Docker image | `docker build -t calculations-api .` |
+| Run with Docker Compose | `docker-compose up -d` |
+| Stop Docker Compose | `docker-compose down` |
+| View container logs | `docker logs -f webapi_ass14_web_1` |
+| Quick setup (Windows) | `.\setup.bat` |
+| Quick setup (Linux/Mac) | `./setup.sh` |
+
+## Submission Tips
+
+- Commit frequently with meaningful messages describing each feature
+- Keep .env or secrets out of version control (use .gitignore)
+- Verify all tests pass locally before pushing
+- Ensure GitHub Actions workflow completes successfully
+- Capture required screenshots showing green checkmarks in Actions tab
+- Verify Docker image is publicly accessible on Docker Hub
+- Update README with your actual GitHub and Docker Hub usernames
+- Test the application end-to-end before submission
+
+## Learning Outcomes
+
+**CLO3: Create Python applications with automated testing**
+- Comprehensive E2E tests with Playwright for browser automation
+- Test fixtures and database isolation
+- 15+ tests with comprehensive coverage of positive, negative, and edge cases
+
+**CLO4: Set up GitHub Actions for CI**
+- Automated testing on push and pull requests
+- PostgreSQL service containers
+- Automated Docker builds and deployment
+- Test result uploads
+
+**CLO9: Apply containerization techniques**
+- Optimized Dockerfile for production
+- Docker Compose for local development
+- Environment variable management
+- Service orchestration with health checks
+
+**CLO10: Create, consume, and test REST APIs**
+- RESTful endpoint design (BREAD pattern)
+- Proper HTTP methods and status codes
+- API documentation with OpenAPI/Swagger
+- Request/response validation
+
+**CLO11: Integrate with SQL databases**
+- SQLAlchemy ORM models with relationships
+- Foreign key constraints and cascade operations
+- Database session management
+- PostgreSQL in production
+
+**CLO12: Serialize/deserialize JSON with Pydantic**
+- Input validation schemas with custom validators
+- Output serialization with from_attributes
+- Type safety with Python type hints
+- Email validation and password strength checks
+
+**CLO13: Implement secure authentication**
+- JWT token-based authentication
+- Password hashing with bcrypt
+- Secure password storage
+- User authorization and data isolation
+
+## Author
+
+**Bhavana Vuttunoori**
+
+- GitHub: https://github.com/BhavanaVuttunoori
+- Repository: https://github.com/BhavanaVuttunoori/assignment14
 - Docker Hub: https://hub.docker.com/r/bhavanavuttunoori/calculations-api
-- GitHub Repository: https://github.com/BhavanaVuttunoori/assignment14
-- API Documentation: http://localhost:8000/docs
+
+## Acknowledgments
+
+FastAPI documentation and community examples. SQLAlchemy ORM patterns and best practices. Pydantic validation framework. Playwright testing framework. GitHub Actions workflow templates. Course instructors for project guidance.
+
+## Support
+
+For questions or issues:
+- Check the GitHub Issues: https://github.com/BhavanaVuttunoori/assignment14/issues
+- Review the API documentation at http://localhost:8000/docs
+- Review setup scripts (setup.bat / setup.sh)
+- Contact the repository maintainer
+
+## License
+
+This project is created for educational purposes as part of Module 14 assignment for demonstrating user authentication, calculation BREAD operations, comprehensive E2E testing, and CI/CD pipelines.
 
 ---
 
-**Note**: Remember to update the SECRET_KEY in `.env` for production deployments and never commit sensitive credentials to version control.
+**Note**: This project was created as part of Module 14 assignment for demonstrating BREAD functionality with user authentication, JWT tokens, comprehensive Playwright E2E testing, and CI/CD pipelines with Docker deployment.
